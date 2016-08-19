@@ -852,6 +852,18 @@ class ORM implements ArrayAccess {
     }
 
     /**
+     * Counts the number of columns that belong to the primary
+     * key and their value is null.
+     */
+    public function count_null_id_columns() {
+        if (is_array($this->_get_id_column_name())) {
+            return count(array_filter($this->id(), 'is_null'));
+        } else {
+            return is_null($this->id()) ? 1 : 0;
+        }
+    }
+
+    /**
      * Add a column to the list of columns returned by the SELECT
      * query. This defaults to '*'. The second optional argument is
      * the alias to return the column as.
@@ -1710,8 +1722,14 @@ class ORM implements ArrayAccess {
     /**
      * Clear the query cache
      */
-    public static function clear_cache() {
+    /**
+     * Clear the query cache
+     */
+    public static function clear_cache($table_name = null, $connection_name = self::DEFAULT_CONNECTION) {
         self::$_query_cache = array();
+        if(isset(self::$_config[$connection_name]['clear_cache']) and is_callable(self::$_config[$connection_name]['clear_cache'])){
+            return call_user_func_array(self::$_config[$connection_name]['clear_cache'], array($table_name, $connection_name));
+        }
     }
 
     /**
@@ -1791,6 +1809,14 @@ class ORM implements ArrayAccess {
      * or null if not present.
      */
     public function get($key) {
+        if (is_array($key)) {
+            $result = array();
+            foreach($key as $column) {
+                $result[$column] = isset($this->_data[$column]) ? $this->_data[$column] : null;
+            }
+            return $result;
+        }
+
         return isset($this->_data[$key]) ? $this->_data[$key] : null;
     }
 
@@ -1902,22 +1928,41 @@ class ORM implements ArrayAccess {
                     return true;
                 }
                 $query = $this->_build_update();
-                $values[] = $this->id();
+                $id = $this->id();
+                if (is_array($id)) {
+                    $values = array_merge($values, array_values($id));
+                } else {
+                    $values[] = $this->id();
+                }
             } else { // INSERT
                 $query = $this->_build_insert();
             }
         }
 
         $success = self::_execute($query, $values, $this->_connection_name);
+        $caching_auto_clear_enabled = self::$_config[$this->_connection_name]['caching_auto_clear'];
+        if($caching_auto_clear_enabled){
+            self::clear_cache($this->_table_name, $this->_connection_name);
+        }
 
         // If we've just inserted a new record, set the ID of this object
         if ($this->_is_new) {
             $this->_is_new = false;
-            if (is_null($this->id())) {
-                if(self::$_db[$this->_connection_name]->getAttribute(PDO::ATTR_DRIVER_NAME) == 'pgsql') {
-                    $this->_data[$this->_get_id_column_name()] = self::get_last_statement()->fetchColumn();
+            if ($this->count_null_id_columns() != 0) {
+                $db = self::get_db($this->_connection_name);
+                if($db->getAttribute(PDO::ATTR_DRIVER_NAME) == 'pgsql') {
+                    $row = self::get_last_statement()->fetch(PDO::FETCH_ASSOC);
+                    foreach ($row as $key => $value) {
+                        $this->_data[$key] = $value;
+                    }
                 } else {
-                    $this->_data[$this->_get_id_column_name()] = self::$_db[$this->_connection_name]->lastInsertId();
+                    $column = $this->_get_id_column_name();
+                    // if the primary key is compound, assign the last inserted id
+                    // to the first column
+                    if (is_array($column)) {
+                        $column = array_slice($column, 0, 1);
+                    }
+                    $this->_data[$column] = $db->lastInsertId();
                 }
             }
         }
