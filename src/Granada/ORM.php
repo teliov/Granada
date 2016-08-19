@@ -2060,7 +2060,7 @@ class ORM implements ArrayAccess {
         );
         $this->_add_id_column_conditions($query);
 
-        return self::_execute($query, array($this->id()), $this->_connection_name);
+        return self::_execute(join(" ", $query), is_array($this->id(true)) ? array_values($this->id(true)) : array($this->id(true)), $this->_connection_name);
     }
 
     /**
