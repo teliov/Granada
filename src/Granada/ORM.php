@@ -85,6 +85,7 @@ class ORM implements ArrayAccess {
         'logging' => false,
         'logger' => null,
         'caching' => false,
+        'caching_auto_clear' => false,
         'return_result_sets' => true,
         'find_many_primary_id_as_key' => true,
     );
