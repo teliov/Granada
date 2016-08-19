@@ -150,8 +150,12 @@ class Wrapper extends ORM {
     public function find_one($id=null) {
         $result = $this->_create_model_instance(parent::find_one($id));
         if($result){
-            // set result on an result set for the eager load to work
-            $key = (isset($result->{$this->_instance_id_column}) && $this->_associative_results) ? $result->id() : 0;
+            // set result on a result set for the eager load to work
+            if (is_array($this->_instance_id_column)) {
+                $key = 0;
+            }else {
+                $key = (isset($result->{$this->_instance_id_column}) && $this->_associative_results) ? $result->id() : 0;
+            }
             $results = array($key => $result);
             Eager::hydrate($this, $results, self::$_config[$this->_connection_name]['return_result_sets']);
             // return the result as element, not result set
