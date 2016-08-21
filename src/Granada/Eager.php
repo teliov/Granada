@@ -27,7 +27,6 @@
                 foreach ($orm->relationships as $include)
                 {
 
-                    $relationship      = false;
                     $relationship_with = null;
                     $relationship_args = array();
 
@@ -187,13 +186,21 @@
             // if parents is not a associative array
             if(key(reset($parents)) === 0)  {
                 $results = array();
+                $counter = 0;
                 foreach ($related as $key => $child)
                 {
+                    $id = $child->id();
                     if(empty($results[$child[$relating_key]]) && $return_result_set){
                         $resultSetClass = $child->get_resultSetClass();
                         $results[$child[$relating_key]] = new $resultSetClass();
                     }
-                    $results[$child[$relating_key]][$child->id] = $child;
+
+                    if (is_array($id)) {
+                        $results[$child[$relating_key]][$counter] = $child;
+                    }else {
+                        $results[$child[$relating_key]][$child->id] = $child;
+                    }
+                    $counter += 1;
                 }
 
                 foreach($parents as $p_key=>$parent){

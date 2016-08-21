@@ -88,12 +88,6 @@ class Wrapper extends ORM {
         return $this->select_expr($expr, $alias);
     }
 
-    /**
-     * Special method to query the table by its primary key
-     */
-    public function where_id_in($ids) {
-        return $this->where_in($this->_get_id_column_name(), $ids);
-    }
 
     /**
      *
@@ -109,8 +103,7 @@ class Wrapper extends ORM {
      * Add an unquoted expression to the list of columns to GROUP BY
      */
     public function group_by_raw($expr) {
-        $this->_group_by[] = $expr;
-        return $this;
+        return $this->group_by_expr($expr);
     }
 
 
@@ -132,12 +125,17 @@ class Wrapper extends ORM {
     public function insert($rows, $ignore = false)
     {
         ORM::get_db()->beginTransaction();
-        foreach ($rows as $row) {
-            $class = $this->_class_name;
-            $class::create($row)->save($ignore);
+        try {
+            foreach ($rows as $row) {
+                $class = $this->_class_name;
+                $class::create($row)->save($ignore);
+            }
+            ORM::get_db()->commit();
+            return ORM::get_db()->lastInsertId();
+        } catch (\PDOException $e) {
+            ORM::get_db()->rollBack();
+            throw $e;
         }
-        ORM::get_db()->commit();
-        return ORM::get_db()->lastInsertId();
     }
 
     /**

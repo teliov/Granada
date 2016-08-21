@@ -4,12 +4,13 @@ use ArrayAccess;
 use Countable;
 use IteratorAggregate;
 use ArrayIterator;
+use JsonSerializable;
 
 /**
  * A result set class for working with collections of model instances
  * @author Simon Holywell <treffynnon@php.net>
  */
-class ResultSet implements ArrayAccess, Countable, IteratorAggregate {
+class ResultSet implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable {
     /**
      * The current result set as an array
      * @var array
@@ -167,6 +168,14 @@ class ResultSet implements ArrayAccess, Countable, IteratorAggregate {
         unset($this->_results[$offset]);
     }
 
+    /**
+     * JsonSerialize
+     */
+    function jsonSerialize()
+    {
+        return $this->get_results();
+    }
+
 
     /**
      * Call a method on all models in a result set. This allows for method
@@ -183,4 +192,5 @@ class ResultSet implements ArrayAccess, Countable, IteratorAggregate {
         }
         return $this;
     }
+
 }
