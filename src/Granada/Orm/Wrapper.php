@@ -190,7 +190,7 @@ class Wrapper extends ORM {
 
         $results = $this->find_many();
 
-        return new Paginator($results, $total, $perPage, $page);
+        return new Paginator($results->get_results(), $total, $perPage, $page);
     }
 
     /**

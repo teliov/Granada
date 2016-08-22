@@ -52,7 +52,7 @@ class Paginator extends ResultSet
         return $this->currentPage < $this->lastPage;
     }
 
-    public function nextPage()
+    public function getNextPage()
     {
         return $this->hasNext() ? $this->currentPage + 1: null;
     }
@@ -83,7 +83,7 @@ class Paginator extends ResultSet
             "data" => $this->get_results(),
             "total" => $this->getTotal(),
             "page" => $this->getCurrentPage(),
-            "next_page" => $this->nextPage(),
+            "next_page" => $this->getNextPage(),
             "per_page" => $this->getPerPage(),
             "last_page" => $this->getLastPage()
         ];
