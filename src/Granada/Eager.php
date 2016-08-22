@@ -213,21 +213,21 @@
             }
             else {
                 // if parents is an associative array
+                $counter = 0;
                 foreach ($related as $key => $child)
                 {
                     // if resultSet must be returned, create it if the relationships key is not defined
                     if(empty($parents[$child[$relating_key]]->relationships[$include]) && $return_result_set){
                         $resultSetClass = $child->get_resultSetClass();
-                        $parents[$child->$relating_key]->relationships[$include] = new $resultSetClass();
+                        $parents[$child[$relating_key]]->relationships[$include] = new $resultSetClass();
                     }
 
                     // add the instance to the relationship array-resultSet
                     $id = $child->id();
-                    $counter = 0;
                     if (is_array($id)){
-                        $parents[$child->$relating_key]->relationships[$include][$counter] = $child;
+                        $parents[$child[$relating_key]]->relationships[$include][$counter] = $child;
                     } else{
-                        $parents[$child->$relating_key]->relationships[$include][$id] = $child;
+                        $parents[$child[$relating_key]]->relationships[$include][$id] = $child;
                     }
 
                     $counter += 1;
