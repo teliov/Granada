@@ -115,6 +115,12 @@ use ArrayAccess;
          */
         public $relating_table;
 
+        /**
+         * results are paginated -> needed to fetch paginated values for eager loading
+         * @var bool
+         */
+        protected $_is_paginated = false;
+
 
         /**
          * Retrieve the value of a static property on a class. If the

@@ -87,6 +87,8 @@ class ORM implements ArrayAccess {
         'caching' => false,
         'caching_auto_clear' => false,
         'return_result_sets' => true,
+        'pagination_limit' => 100,
+        'pagination_default_page' => 1,
         'find_many_primary_id_as_key' => true,
     );
 
@@ -689,6 +691,24 @@ class ORM implements ArrayAccess {
     protected function _find_many($associative = true) {
         $rows = $this->_run();
         return $this->_get_instances($rows);
+    }
+
+    /**
+     * Get a paginated result set as opposed to pulling all results from the database
+     */
+    public function paginate($perPage = null, $page = null, $columns = ['*'])
+    {
+        $perPage = intval($perPage) ?: self::$_config[$this->_connection_name]['pagination_limit'];
+
+        $page = intval($page) ?: self::$_config[$this->_connection_name]['pagination_default_page'];
+
+        $total = $this->count();
+
+        $this->offset(($page - 1) * $perPage)->limit($perPage);
+
+        $results = $this->_find_many();
+
+        return new Paginator($results, $total, $perPage, $page);
     }
 
     /**

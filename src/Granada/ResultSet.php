@@ -70,15 +70,6 @@ class ResultSet implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     }
 
     /**
-     * Merge the resultSet with an array
-     * @return ResultSet
-     */
-    public function merge(IdiormResultSet $result) {
-        array_push($this->_results, $this->_results);
-        return $this;
-    }
-
-    /**
      * Get the first element of the result set
      * @return Model
      */
