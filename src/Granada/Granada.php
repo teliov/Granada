@@ -122,6 +122,16 @@ use JsonSerializable;
          */
         protected $_is_paginated = false;
 
+        /**
+         * @var null
+         */
+        public static $_order_by_property = null;
+
+        /**
+         * @var null
+         */
+        public static $_order_by_direction = "DESC";
+
 
         /**
          * Retrieve the value of a static property on a class. If the
@@ -218,6 +228,8 @@ use JsonSerializable;
             $wrapper->set_class_name($class_name);
             $wrapper->use_id_column(self::_get_id_column_name($class_name));
             $wrapper->resultSetClass = $class_name::$resultSetClass;
+            $wrapper->set_order_by_property(self::_get_static_property($class_name, "_order_by_property"));
+            $wrapper->set_order_by_direction(self::_get_static_property($class_name, "_order_by_direction"));
             return $wrapper;
         }
 

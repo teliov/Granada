@@ -25,6 +25,26 @@ class Wrapper extends ORM {
     public $relationships = array();
 
     /**
+     * @var null
+     */
+    public $_order_by_property = null;
+
+    /**
+     * @var null
+     */
+    public $_order_by_direction = "DESC";
+
+    public function set_order_by_property($property)
+    {
+        $this->_order_by_property = $property;
+    }
+
+    public function set_order_by_direction($direction)
+    {
+        $this->_order_by_direction = $direction;
+    }
+
+    /**
      * Set the name of the class which the wrapped
      * methods should return instances of.
      * @param string $class_name
@@ -171,6 +191,15 @@ class Wrapper extends ORM {
      * @return array|\Granada\ResultSet
      */
     public function find_many() {
+        if (!count($this->_order_by) && $this->_order_by_property) {
+            switch (strtolower($this->_order_by_direction)) {
+                case "asc":
+                    parent::order_by_asc($this->_order_by_property);
+                    break;
+                default:
+                    parent::order_by_desc($this->_order_by_property);
+            }
+        }
         $instances = parent::find_many();
         return $instances ? Eager::hydrate($this, $instances, self::$_config[$this->_connection_name]['return_result_sets']) : $instances;
     }
