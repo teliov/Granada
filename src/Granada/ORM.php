@@ -2,6 +2,7 @@
 
 use ArrayAccess;
 use PDO;
+use JsonSerializable;
 
 /**
  *
@@ -51,7 +52,7 @@ use PDO;
  *
  */
 
-class ORM implements ArrayAccess {
+class ORM implements ArrayAccess, JsonSerializable {
 
     // ----------------------- //
     // --- CLASS CONSTANTS --- //
@@ -196,7 +197,7 @@ class ORM implements ArrayAccess {
     /**
      * Pass configuration settings to the class in the form of
      * key/value pairs. As a shortcut, if the second argument
-     * is omitted and the key is a string, the setting is
+     * is omitted and the key // TODO: Implement jsonSerialize() method.is a string, the setting is
      * assumed to be the DSN string used by PDO to connect
      * to the database (often, this will be the only configuration
      * required to use Idiorm). If you have more than one setting
@@ -2398,5 +2399,10 @@ class ORM implements ArrayAccess {
         $method = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
 
         return call_user_func_array(array(self, $method), $arguments);
+    }
+
+    function jsonSerialize()
+    {
+        return $this->as_array();
     }
 }

@@ -1,6 +1,7 @@
 <?php namespace Granada;
 
 use ArrayAccess;
+use JsonSerializable;
 
    /**
     *
@@ -55,7 +56,7 @@ use ArrayAccess;
      * }
      *
      */
-    class Granada implements ArrayAccess  {
+    class Granada implements ArrayAccess, JsonSerializable  {
 
         // Default ID column for all models. Can be overridden by adding
         // a public static _id_column property to your model classes.
@@ -575,5 +576,10 @@ use ArrayAccess;
                 $model = self::factory(get_called_class());
                 return call_user_func_array(array($model, $method), $parameters);
             }
+        }
+
+        function jsonSerialize()
+        {
+            return $this->as_array();
         }
     }
