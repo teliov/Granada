@@ -220,8 +220,17 @@
                         $resultSetClass = $child->get_resultSetClass();
                         $parents[$child->$relating_key]->relationships[$include] = new $resultSetClass();
                     }
+
                     // add the instance to the relationship array-resultSet
-                    $parents[$child->$relating_key]->relationships[$include][$child->id()] = $child;
+                    $id = $child->id();
+                    $counter = 0;
+                    if (is_array($id)){
+                        $parents[$child->$relating_key]->relationships[$include][$counter] = $child;
+                    } else{
+                        $parents[$child->$relating_key]->relationships[$include][$id] = $child;
+                    }
+
+                    $counter += 1;
                 }
             }
         }
