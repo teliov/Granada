@@ -1312,7 +1312,7 @@ class ORM implements ArrayAccess {
      * added, and these will be ANDed together when the final query
      * is built.
      */
-    public function where($column_name, $value) {
+    public function where($column_name, $value=null) {
         return $this->where_equal($column_name, $value);
     }
 
@@ -1320,7 +1320,7 @@ class ORM implements ArrayAccess {
      * More explicitly named version of for the where() method.
      * Can be used if preferred.
      */
-    public function where_equal($column_name, $value) {
+    public function where_equal($column_name, $value=null) {
         return $this->_add_simple_where($column_name, '=', $value);
     }
 
@@ -1329,7 +1329,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string $value
      */
-    public function where_not_equal($column_name, $value) {
+    public function where_not_equal($column_name, $value=null) {
         return $this->_add_simple_where($column_name, '!=', $value);
     }
 
@@ -1398,7 +1398,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string $value
      */
-    public function where_like($column_name, $value) {
+    public function where_like($column_name, $value=null) {
         return $this->_add_simple_where($column_name, 'LIKE', $value);
     }
 
@@ -1407,7 +1407,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string $value
      */
-    public function where_not_like($column_name, $value) {
+    public function where_not_like($column_name, $value=null) {
         return $this->_add_simple_where($column_name, 'NOT LIKE', $value);
     }
 
@@ -1416,7 +1416,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function where_gt($column_name, $value) {
+    public function where_gt($column_name, $value=null) {
         return $this->_add_simple_where($column_name, '>', $value);
     }
 
@@ -1425,7 +1425,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function where_lt($column_name, $value) {
+    public function where_lt($column_name, $value=null) {
         return $this->_add_simple_where($column_name, '<', $value);
     }
 
@@ -1434,7 +1434,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function where_gte($column_name, $value) {
+    public function where_gte($column_name, $value=null) {
         return $this->_add_simple_where($column_name, '>=', $value);
     }
 
@@ -1443,21 +1443,21 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function where_lte($column_name, $value) {
+    public function where_lte($column_name, $value=null) {
         return $this->_add_simple_where($column_name, '<=', $value);
     }
 
     /**
      * Add a WHERE ... IN clause to your query
      */
-    public function where_in($column_name, $values) {
+    public function where_in($column_name, $values=null) {
         return $this->_add_where_placeholder($column_name, 'IN', $values);
     }
 
     /**
      * Add a WHERE ... NOT IN clause to your query
      */
-    public function where_not_in($column_name, $values) {
+    public function where_not_in($column_name, $values=null) {
         return $this->_add_where_placeholder($column_name, 'NOT IN', $values);
     }
 
@@ -1563,7 +1563,7 @@ class ORM implements ArrayAccess {
      * added, and these will be ANDed together when the final query
      * is built.
      */
-    public function having($column_name, $value) {
+    public function having($column_name, $value=null) {
         return $this->having_equal($column_name, $value);
     }
 
@@ -1571,7 +1571,7 @@ class ORM implements ArrayAccess {
      * More explicitly named version of for the having() method.
      * Can be used if preferred.
      */
-    public function having_equal($column_name, $value) {
+    public function having_equal($column_name, $value=null) {
         return $this->_add_simple_having($column_name, '=', $value);
     }
 
@@ -1580,7 +1580,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string $value
      */
-    public function having_not_equal($column_name, $value) {
+    public function having_not_equal($column_name, $value=null) {
         return $this->_add_simple_having($column_name, '!=', $value);
     }
 
@@ -1600,7 +1600,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string $value
      */
-    public function having_like($column_name, $value) {
+    public function having_like($column_name, $value=null) {
         return $this->_add_simple_having($column_name, 'LIKE', $value);
     }
 
@@ -1609,7 +1609,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string $value
      */
-    public function having_not_like($column_name, $value) {
+    public function having_not_like($column_name, $value=null) {
         return $this->_add_simple_having($column_name, 'NOT LIKE', $value);
     }
 
@@ -1618,7 +1618,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function having_gt($column_name, $value) {
+    public function having_gt($column_name, $value=null) {
         return $this->_add_simple_having($column_name, '>', $value);
     }
 
@@ -1627,7 +1627,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function having_lt($column_name, $value) {
+    public function having_lt($column_name, $value=null) {
         return $this->_add_simple_having($column_name, '<', $value);
     }
 
@@ -1636,7 +1636,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function having_gte($column_name, $value) {
+    public function having_gte($column_name, $value=null) {
         return $this->_add_simple_having($column_name, '>=', $value);
     }
 
@@ -1645,7 +1645,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param integer $value
      */
-    public function having_lte($column_name, $value) {
+    public function having_lte($column_name, $value=null) {
         return $this->_add_simple_having($column_name, '<=', $value);
     }
 
@@ -1654,7 +1654,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string[] $values
      */
-    public function having_in($column_name, $values) {
+    public function having_in($column_name, $values=null) {
         return $this->_add_having_placeholder($column_name, 'IN', $values);
     }
 
@@ -1663,7 +1663,7 @@ class ORM implements ArrayAccess {
      * @param string $column_name
      * @param string[] $values
      */
-    public function having_not_in($column_name, $values) {
+    public function having_not_in($column_name, $values=null) {
         return $this->_add_having_placeholder($column_name, 'NOT IN', $values);
     }
 
