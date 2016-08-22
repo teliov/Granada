@@ -3,6 +3,7 @@
 use Granada\ORM;
 use Granada\Eager;
 use Exception;
+use Granada\Paginator;
 
 /**
  * Subclass of Idiorm's ORM class that supports
@@ -172,6 +173,24 @@ class Wrapper extends ORM {
     public function find_many() {
         $instances = parent::find_many();
         return $instances ? Eager::hydrate($this, $instances, self::$_config[$this->_connection_name]['return_result_sets']) : $instances;
+    }
+
+    /**
+     * Get  paginated results
+     */
+    public function paginate($page = null, $perPage = null, $columns = ['*'])
+    {
+        $perPage = intval($perPage) ?: self::$_config[$this->_connection_name]['pagination_limit'];
+
+        $page = intval($page) ?: self::$_config[$this->_connection_name]['pagination_default_page'];
+
+        $total = parent::count();
+
+        parent::offset(($page - 1) * $perPage)->limit($perPage);
+
+        $results = $this->find_many();
+
+        return new Paginator($results, $total, $perPage, $page);
     }
 
     /**
