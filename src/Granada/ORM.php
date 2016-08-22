@@ -697,7 +697,7 @@ class ORM implements ArrayAccess, JsonSerializable {
     /**
      * Get a paginated result set as opposed to pulling all results from the database
      */
-    public function paginate($perPage = null, $page = null, $columns = ['*'])
+    public function paginate($page = null, $perPage = null, $columns = ['*'])
     {
         $perPage = intval($perPage) ?: self::$_config[$this->_connection_name]['pagination_limit'];
 
