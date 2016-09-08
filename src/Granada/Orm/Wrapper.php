@@ -111,16 +111,6 @@ class Wrapper extends ORM {
 
 
     /**
-     *
-     * Create raw_join
-     *
-     */
-    public function raw_join($join){
-        $this->_join_sources[] = "$join";
-        return $this;
-    }
-
-    /**
      * Add an unquoted expression to the list of columns to GROUP BY
      */
     public function group_by_raw($expr) {
