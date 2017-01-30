@@ -42,9 +42,9 @@ class Paginator extends ResultSet
         parent::__construct($items);
 
         $this->total = $total;
-        $this->perPage= $perPage;
+        $this->perPage = $perPage;
         $this->currentPage = $currentPage;
-        $this->lastPage = ceil($total/$perPage);
+        $this->lastPage = ceil($total / $perPage);
     }
 
     public function hasNext()
@@ -54,7 +54,7 @@ class Paginator extends ResultSet
 
     public function getNextPage()
     {
-        return $this->hasNext() ? $this->currentPage + 1: null;
+        return $this->hasNext() ? $this->currentPage + 1 : null;
     }
 
     public function getTotal()
@@ -81,11 +81,13 @@ class Paginator extends ResultSet
     {
         return [
             "data" => $this->get_results(),
-            "total" => $this->getTotal(),
-            "page" => $this->getCurrentPage(),
-            "next_page" => $this->getNextPage(),
-            "per_page" => $this->getPerPage(),
-            "last_page" => $this->getLastPage()
+            "pagination" => [
+                "total" => $this->getTotal(),
+                "page" => $this->getCurrentPage(),
+                "next_page" => $this->getNextPage(),
+                "per_page" => $this->getPerPage(),
+                "last_page" => $this->getLastPage()
+            ]
         ];
     }
 
